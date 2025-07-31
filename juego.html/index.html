@@ -211,7 +211,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #4CAF50; /* Un color de éxito */
+            background-color: #4CAF50; /* Un color de Ã©xito */
             color: white;
             padding: 15px 30px;
             border-radius: 12px;
@@ -302,20 +302,20 @@
         <button id="customizeBallBtn">Personalizar Bola</button>
     </div>
 
-    <!-- Contador de FPS y Puntuación -->
+    <!-- Contador de FPS y PuntuaciÃ³n -->
     <div class="top-right-info" id="top-right-info" style="display:none;">
         <div>Usuario: <span id="user-email">No Autenticado</span></div>
-        <div>Puntuación: <span id="score-display">0</span></div>
+        <div>PuntuaciÃ³n: <span id="score-display">0</span></div>
     </div>
 
-    <!-- Panel de Autenticación -->
+    <!-- Panel de AutenticaciÃ³n -->
     <div id="auth-panel" class="auth-panel">
-        <h2>Inicia sesión o crea una cuenta</h2>
-        <input type="email" id="email-input" placeholder="Correo electrónico">
-        <input type="password" id="password-input" placeholder="Contraseña">
+        <h2>Inicia sesiÃ³n o crea una cuenta</h2>
+        <input type="email" id="email-input" placeholder="Correo electrÃ³nico">
+        <input type="password" id="password-input" placeholder="ContraseÃ±a">
         <div class="button-group">
             <button id="signup-btn">Crear cuenta</button>
-            <button id="login-btn">Iniciar sesión</button>
+            <button id="login-btn">Iniciar sesiÃ³n</button>
         </div>
         <div id="auth-error" style="color: red; display: none;"></div>
     </div>
@@ -324,11 +324,11 @@
     <div id="settings-panel" class="panel">
         <h2>Ajustes</h2>
         <div class="setting-item">
-            <label for="gravity-slider">Gravedad: <span id="gravity-value">-9.82</span> m/s²</label>
+            <label for="gravity-slider">Gravedad: <span id="gravity-value">-9.82</span> m/sÂ²</label>
             <input type="range" id="gravity-slider" min="-20" max="0" value="-9.82" step="0.1">
         </div>
         <div class="setting-item">
-            <label>Calidad de gráficos:</label>
+            <label>Calidad de grÃ¡ficos:</label>
             <div class="radio-group-horizontal">
                 <label><input type="radio" name="graphics" value="low" id="graphics-low" checked> Bajo</label>
                 <label><input type="radio" name="graphics" value="medium" id="graphics-medium"> Medios</label>
@@ -341,11 +341,11 @@
             <button id="saveBtn">Guardar</button>
             <button id="loadBtn">Cargar</button>
         </div>
-        <button id="logoutBtn">Cerrar sesión</button>
+        <button id="logoutBtn">Cerrar sesiÃ³n</button>
         <button id="closeSettingsBtn">Cerrar</button>
     </div>
 
-    <!-- Panel de Personalización de Bola -->
+    <!-- Panel de PersonalizaciÃ³n de Bola -->
     <div id="customize-panel" class="panel">
         <h2>Personalizar Bola</h2>
         <div class="setting-item">
@@ -358,7 +358,7 @@
                 <label><input type="radio" name="texture" value="none" checked> Sin textura</label>
                 <label><input type="radio" name="texture" value="stone"> Piedra</label>
                 <label><input type="radio" name="texture" value="basketball"> Baloncesto</label>
-                <label><input type="radio" name="texture" value="grid"> Cuadrícula</label>
+                <label><input type="radio" name="texture" value="grid"> CuadrÃ­cula</label>
             </div>
         </div>
         <button id="closeCustomizeBtn">Cerrar</button>
@@ -368,7 +368,7 @@
     <div id="achievements-panel" class="panel">
         <h2>Logros</h2>
         <ul id="achievements-list" class="achievements-list">
-            <!-- Los logros se insertarán aquí dinámicamente -->
+            <!-- Los logros se insertarÃ¡n aquÃ­ dinÃ¡micamente -->
         </ul>
         <button id="closeAchievementsBtn">Cerrar</button>
     </div>
@@ -376,16 +376,16 @@
     <!-- Mensaje de advertencia de FPS bajos -->
     <div id="low-fps-message" class="message-box">
         <h3>Tus FPS han bajado.</h3>
-        <p>¿Quieres poner los gráficos en bajo para mejorar el rendimiento?</p>
+        <p>Â¿Quieres poner los grÃ¡ficos en bajo para mejorar el rendimiento?</p>
         <div class="button-group">
-            <button id="confirmLowGraphicsBtn">Sí</button>
+            <button id="confirmLowGraphicsBtn">SÃ­</button>
             <button id="cancelLowGraphicsBtn">No</button>
         </div>
     </div>
     
     <!-- Mensaje de logro desbloqueado -->
     <div id="achievement-message" class="achievement-box">
-        ¡Logro desbloqueado! La Optimización es la clave.
+        Â¡Logro desbloqueado! La OptimizaciÃ³n es la clave.
     </div>
 
     <!-- Mensaje de estado de guardar/cargar -->
@@ -405,7 +405,7 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Variables globales para la escena y la física
+        // Variables globales para la escena y la fÃ­sica
         let scene, camera, renderer, world, controls;
         let groundMesh, rampMesh;
         let groundBody, rampBody;
@@ -435,7 +435,7 @@
         const topLeftControls = document.getElementById('top-left-controls');
         const topRightInfo = document.getElementById('top-right-info');
         
-        // Elementos de autenticación
+        // Elementos de autenticaciÃ³n
         const authPanel = document.getElementById('auth-panel');
         const emailInput = document.getElementById('email-input');
         const passwordInput = document.getElementById('password-input');
@@ -453,12 +453,12 @@
         const statusMessage = document.getElementById('status-message');
         const statusText = document.getElementById('status-text');
 
-        // Variables para la puntuación
+        // Variables para la puntuaciÃ³n
         let score = 0;
         const scoreDisplay = document.getElementById('score-display');
         
         let cubeCamera, environmentMap;
-        let currentGraphicsSetting = 'low'; // Iniciar con gráficos bajos por defecto
+        let currentGraphicsSetting = 'low'; // Iniciar con grÃ¡ficos bajos por defecto
         let currentSphereColor = '#ddffff';
         let currentSphereTexture = 'none';
 
@@ -473,7 +473,7 @@
             'grid': 'https://placehold.co/600x400/333333/dddddd?text=Cuadricula',
         };
 
-        // Variables para la optimización de frustum culling
+        // Variables para la optimizaciÃ³n de frustum culling
         const frustum = new THREE.Frustum();
         const matrix = new THREE.Matrix4();
 
@@ -494,11 +494,11 @@
         let app, db, auth, userId;
         let isAuthReady = false;
         
-        // Configuración e inicialización de Firebase
+        // ConfiguraciÃ³n e inicializaciÃ³n de Firebase
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
-        // Función para inicializar Firebase
+        // FunciÃ³n para inicializar Firebase
         function initializeFirebase() {
             try {
                 if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
@@ -529,16 +529,16 @@
                     });
                 } else {
                     console.error('Firebase config not found. Auth and Save/Load will be disabled.');
-                    authPanel.innerHTML = '<p style="color:red;">Error: Funcionalidad de autenticación y guardado deshabilitada. Configuración de Firebase no encontrada.</p>';
+                    authPanel.innerHTML = '<p style="color:red;">Error: Funcionalidad de autenticaciÃ³n y guardado deshabilitada. ConfiguraciÃ³n de Firebase no encontrada.</p>';
                 }
             } catch (error) {
                 console.error('Error initializing Firebase:', error);
-                authError.textContent = 'Error de conexión. Por favor, revisa tu internet.';
+                authError.textContent = 'Error de conexiÃ³n. Por favor, revisa tu internet.';
                 authError.style.display = 'block';
             }
         }
         
-        // Función para mostrar un mensaje de estado
+        // FunciÃ³n para mostrar un mensaje de estado
         function showStatusMessage(message, duration = 2000) {
             statusText.textContent = message;
             statusMessage.style.display = 'flex';
@@ -547,15 +547,15 @@
             }, duration);
         }
 
-        // Función para actualizar la puntuación mostrada
+        // FunciÃ³n para actualizar la puntuaciÃ³n mostrada
         function updateScoreDisplay() {
             scoreDisplay.textContent = score;
         }
 
-        // Función para guardar el estado del juego en Firestore
+        // FunciÃ³n para guardar el estado del juego en Firestore
         async function saveState() {
             if (!isAuthReady || !userId) {
-                showStatusMessage('Error: No has iniciado sesión.');
+                showStatusMessage('Error: No has iniciado sesiÃ³n.');
                 return;
             }
 
@@ -578,7 +578,7 @@
 
                 const docRef = doc(db, `/artifacts/${appId}/users/${userId}/gameData/state`);
                 await setDoc(docRef, data);
-                showStatusMessage('Partida guardada con éxito!');
+                showStatusMessage('Partida guardada con Ã©xito!');
                 console.log('Game state saved successfully.');
             } catch (error) {
                 console.error('Error saving state:', error);
@@ -586,10 +586,10 @@
             }
         }
 
-        // Función para cargar el estado del juego desde Firestore
+        // FunciÃ³n para cargar el estado del juego desde Firestore
         async function loadState() {
             if (!isAuthReady || !userId) {
-                showStatusMessage('Error: No has iniciado sesión.');
+                showStatusMessage('Error: No has iniciado sesiÃ³n.');
                 return;
             }
 
@@ -618,9 +618,9 @@
                     document.getElementById('color-picker').value = data.ballColor;
                     document.getElementById(`graphics-${data.graphics}`).checked = true;
                     document.querySelector(`input[name="texture"][value="${data.ballTexture}"]`).checked = true;
-                    updateScoreDisplay(); // Actualizar la puntuación después de cargar
+                    updateScoreDisplay(); // Actualizar la puntuaciÃ³n despuÃ©s de cargar
 
-                    // Volver a aplicar la configuración de gráficos para actualizar materiales
+                    // Volver a aplicar la configuraciÃ³n de grÃ¡ficos para actualizar materiales
                     applyGraphicsSetting();
 
                     // Recrear las esferas a partir de los datos cargados
@@ -641,7 +641,7 @@
                         sphereBodies.push(sphereBody);
                     });
 
-                    showStatusMessage('Partida cargada con éxito!');
+                    showStatusMessage('Partida cargada con Ã©xito!');
                     console.log('Game state loaded successfully.');
                 } else {
                     showStatusMessage('No hay partida guardada.');
@@ -653,7 +653,7 @@
             }
         }
         
-        // Función para limpiar todas las luces de la escena
+        // FunciÃ³n para limpiar todas las luces de la escena
         function clearLights() {
             // Eliminar luces existentes si las hay
             scene.children.forEach(child => {
@@ -663,11 +663,11 @@
             });
         }
         
-        // Función para añadir luces estáticas para un entorno de día
+        // FunciÃ³n para aÃ±adir luces estÃ¡ticas para un entorno de dÃ­a
         function addLights() {
             clearLights(); // Primero elimina las luces existentes
             
-            // Luz ambiental para una iluminación suave
+            // Luz ambiental para una iluminaciÃ³n suave
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             
@@ -686,11 +686,11 @@
             scene.add(directionalLight1);
         }
         
-        // Función para aplicar la configuración de gráficos
+        // FunciÃ³n para aplicar la configuraciÃ³n de grÃ¡ficos
         function applyGraphicsSetting() {
-            console.log(`Aplicando configuración de gráficos: ${currentGraphicsSetting}`);
+            console.log(`Aplicando configuraciÃ³n de grÃ¡ficos: ${currentGraphicsSetting}`);
             
-            // Ajustar sombras y renderer según la configuración
+            // Ajustar sombras y renderer segÃºn la configuraciÃ³n
             if (currentGraphicsSetting === 'low') {
                 renderer.shadowMap.enabled = false;
             } else {
@@ -700,11 +700,11 @@
             // Actualizar el material de todas las esferas existentes
             updateExistingSpheresMaterial();
             
-            // Reiniciar el flag de advertencia si el usuario cambia los gráficos manualmente
+            // Reiniciar el flag de advertencia si el usuario cambia los grÃ¡ficos manualmente
             lowFpsWarningShown = false;
         }
         
-        // Función para actualizar el material de todas las esferas existentes
+        // FunciÃ³n para actualizar el material de todas las esferas existentes
         function updateExistingSpheresMaterial() {
             const newMaterial = createSphereMaterial();
             sphereMeshes.forEach(mesh => {
@@ -712,11 +712,11 @@
             });
         }
         
-        // Función para crear el suelo
+        // FunciÃ³n para crear el suelo
         function createGround() {
             const groundGeometry = new THREE.PlaneGeometry(50, 50);
             
-            // Material con un color de fallback para el césped
+            // Material con un color de fallback para el cÃ©sped
             const groundMaterial = new THREE.MeshPhongMaterial({
                 color: 0x446644,
                 side: THREE.DoubleSide,
@@ -729,7 +729,7 @@
             groundMesh.receiveShadow = true;
             scene.add(groundMesh);
 
-            // Cargar la textura de césped y aplicarla al material una vez que esté lista
+            // Cargar la textura de cÃ©sped y aplicarla al material una vez que estÃ© lista
             const loader = new THREE.TextureLoader();
             loader.load(
                 'https://media.istockphoto.com/id/155596727/es/foto/fondo-verde-hierba.jpg?s=612x612&w=0&k=20&c=dnquCKa4zBBgDr9JCISLpWBWR7-_yfjhfLNjP-8mlpI=',
@@ -741,7 +741,7 @@
                 },
                 undefined,
                 (err) => {
-                    console.error('Error al cargar la textura de césped debido a CORS:', err);
+                    console.error('Error al cargar la textura de cÃ©sped debido a CORS:', err);
                 }
             );
             
@@ -751,7 +751,7 @@
             world.addBody(groundBody);
         }
 
-        // Función para crear la rampa, ahora con textura
+        // FunciÃ³n para crear la rampa, ahora con textura
         function createRamp() {
             const rampGeometry = new THREE.BoxGeometry(10, 1, 5);
 
@@ -768,7 +768,7 @@
             rampMesh.castShadow = true;
             scene.add(rampMesh);
 
-            // Cargar la textura de madera y aplicarla al material una vez que esté lista
+            // Cargar la textura de madera y aplicarla al material una vez que estÃ© lista
             const loader = new THREE.TextureLoader();
             loader.load(
                 'https://media.istockphoto.com/id/1415858611/es/foto/textura-de-madera-para-muebles-o-dise%C3%B1o-de-interiores-fondo-de-madera-oscura.jpg?s=612x612&w=0&k=20&c=YxOp0NaviJgng5n5ry9TbMQdp9BCoAQ8spELTsB-5Uc=',
@@ -793,7 +793,7 @@
 
         // Configura el mapa de entorno para reflejos de las esferas de cristal
         function setupEnvironmentMap() {
-            const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024, { // Aumentar resolución a 1024
+            const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024, { // Aumentar resoluciÃ³n a 1024
                 format: THREE.RGBFormat,
                 generateMipmaps: true,
                 minFilter: THREE.LinearMipmapLinearFilter
@@ -802,35 +802,35 @@
             environmentMap = cubeRenderTarget.texture;
         }
         
-        // Función para crear el material de la esfera basado en la configuración de gráficos
+        // FunciÃ³n para crear el material de la esfera basado en la configuraciÃ³n de grÃ¡ficos
         function createSphereMaterial() {
             let material;
             const color = new THREE.Color(currentSphereColor);
             
             switch (currentGraphicsSetting) {
                 case 'low':
-                    // Material básico para rendimiento óptimo
+                    // Material bÃ¡sico para rendimiento Ã³ptimo
                     material = new THREE.MeshLambertMaterial({ color: color });
                     break;
                 case 'medium':
-                    // Material Phong para un sombreado más avanzado y reflejos especulares
+                    // Material Phong para un sombreado mÃ¡s avanzado y reflejos especulares
                     material = new THREE.MeshPhongMaterial({ color: color });
                     break;
                 case 'rtx':
                 default:
-                    // Material físico mejorado para simular un cristal muy realista
+                    // Material fÃ­sico mejorado para simular un cristal muy realista
                     material = new THREE.MeshPhysicalMaterial({
                         color: color,
                         transparent: true,
-                        transmission: 1.0,         // Máxima transparencia para un efecto de cristal perfecto
-                        roughness: 0.01,           // Casi sin rugosidad para reflejos súper nítidos
+                        transmission: 1.0,         // MÃ¡xima transparencia para un efecto de cristal perfecto
+                        roughness: 0.01,           // Casi sin rugosidad para reflejos sÃºper nÃ­tidos
                         metalness: 0.0,
                         reflectivity: 1.0,         // Reflectividad completa
-                        ior: 1.52,                 // Índice de refracción del vidrio
+                        ior: 1.52,                 // Ãndice de refracciÃ³n del vidrio
                         envMap: environmentMap,
                         clearcoat: 1.0,            // Una capa de barniz para un brillo adicional
                         clearcoatRoughness: 0.05,  // Muy baja rugosidad para el barniz
-                        thickness: 0.5,            // Simula el espesor del objeto para la refracción
+                        thickness: 0.5,            // Simula el espesor del objeto para la refracciÃ³n
                     });
                     break;
             }
@@ -839,7 +839,7 @@
             if (currentSphereTexture !== 'none') {
                 const loader = new THREE.TextureLoader();
                 const textureUrl = textureUrls[currentSphereTexture];
-                // Cargar la textura y aplicarla al material una vez que esté lista
+                // Cargar la textura y aplicarla al material una vez que estÃ© lista
                 loader.load(
                     textureUrl,
                     (texture) => {
@@ -856,7 +856,7 @@
             return material;
         }
 
-        // Función para generar una nueva esfera de cristal
+        // FunciÃ³n para generar una nueva esfera de cristal
         function spawnSphere() {
             const radius = 0.5;
             const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
@@ -869,12 +869,12 @@
 
             const sphereShape = new CANNON.Sphere(radius);
             const sphereBody = new CANNON.Body({ mass: 1, shape: sphereShape });
-            sphereBody.position.set(2, 5, -2); // Posición inicial por encima de la rampa
+            sphereBody.position.set(2, 5, -2); // PosiciÃ³n inicial por encima de la rampa
             world.addBody(sphereBody);
             sphereBodies.push(sphereBody);
         }
 
-        // Función para restablecer la escena (eliminar todas las esferas y reiniciar puntuación)
+        // FunciÃ³n para restablecer la escena (eliminar todas las esferas y reiniciar puntuaciÃ³n)
         function resetScene() {
             while (sphereMeshes.length > 0) {
                 const mesh = sphereMeshes.pop();
@@ -882,20 +882,20 @@
                 const body = sphereBodies.pop();
                 world.remove(body);
             }
-            // Reiniciar la puntuación y el flag de advertencia
+            // Reiniciar la puntuaciÃ³n y el flag de advertencia
             score = 0;
             updateScoreDisplay();
             lowFpsWarningShown = false;
         }
         
-        // Función para manejar el redimensionamiento de la ventana
+        // FunciÃ³n para manejar el redimensionamiento de la ventana
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
         
-        // Función para actualizar la lista de logros en el panel
+        // FunciÃ³n para actualizar la lista de logros en el panel
         function updateAchievementsPanel() {
             const achievementsList = document.getElementById('achievements-list');
             achievementsList.innerHTML = ''; // Limpiar la lista
