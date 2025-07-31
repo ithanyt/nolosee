@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo 3D con Rampa</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #222;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-left-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-right-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            background-color: #004494;
+            transform: translateY(0);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) inset;
+        }
+        
+        .panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            width: 90%;
+            z-index: 100;
+        }
+
+        .panel h2 {
+            margin: 0;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .panel p {
+            margin: 0;
+            text-align: center;
+        }
+
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setting-item label {
+            font-size: 18px;
+        }
+
+        .setting-item input[type="range"] {
+            width: 100%;
+        }
+
+        .setting-item input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            width: 100%;
+            height: 40px;
+            background-color: transparent;
+            cursor: pointer;
+        }
+        
+        .setting-item input[type="color"]::-webkit-color-swatch {
+            border-radius: 8px;
+            border: 2px solid #555;
+        }
+        
+        .setting-item input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .setting-item span {
+            font-weight: bold;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .radio-group-horizontal {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .message-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            max-width: 350px;
+            width: 90%;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message-box h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .message-box .button-group {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .message-box .button-group button {
+            flex-grow: 1;
+        }
+        
+        /* Estilos para el nuevo logro */
+        .achievement-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Un color de éxito */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+            z-index: 300;
+        }
+
+        .achievement-box.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Estilos para el panel de logros */
+        .achievements-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .achievement-item:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-item .status {
+            font-size: 24px;
+        }
+        
+        .auth-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 30px;
+            background-color: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 300;
+        }
+
+        .auth-panel h2 {
+            margin: 0;
+        }
+
+        .auth-panel input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .auth-panel .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+
+    <!-- Controles de la parte inferior -->
+    <div class="controls" id="game-controls" style="display:none;">
+        <button id="spawnSphereBtn">Generar Esfera</button>
+    </div>
+
+    <!-- Controles de la parte superior izquierda -->
+    <div class="top-left-controls" id="top-left-controls" style="display:none;">
+        <button id="settingsBtn">Ajustes</button>
+        <button id="customizeBallBtn">Personalizar Bola</button>
+    </div>
+
+    <!-- Contador de FPS y Puntuación -->
+    <div class="top-right-info" id="top-right-info" style="display:none;">
+        <div>Usuario: <span id="user-email">No Autenticado</span></div>
+        <div>Puntuación: <span id="score-display">0</span></div>
+    </div>
+
+    <!-- Panel de Autenticación -->
+    <div id="auth-panel" class="auth-panel">
+        <h2>Inicia sesión o crea una cuenta</h2>
+        <input type="email" id="email-input" placeholder="Correo electrónico">
+        <input type="password" id="password-input" placeholder="Contraseña">
+        <div class="button-group">
+            <button id="signup-btn">Crear cuenta</button>
+            <button id="login-btn">Iniciar sesión</button>
+        </div>
+        <div id="auth-error" style="color: red; display: none;"></div>
+    </div>
+
+    <!-- Panel de Ajustes -->
+    <div id="settings-panel" class="panel">
+        <h2>Ajustes</h2>
+        <div class="setting-item">
+            <label for="gravity-slider">Gravedad: <span id="gravity-value">-9.82</span> m/s²</label>
+            <input type="range" id="gravity-slider" min="-20" max="0" value="-9.82" step="0.1">
+        </div>
+        <div class="setting-item">
+            <label>Calidad de gráficos:</label>
+            <div class="radio-group-horizontal">
+                <label><input type="radio" name="graphics" value="low" id="graphics-low" checked> Bajo</label>
+                <label><input type="radio" name="graphics" value="medium" id="graphics-medium"> Medios</label>
+                <label><input type="radio" name="graphics" value="rtx" id="graphics-rtx"> Cristal (RTX)</label>
+            </div>
+        </div>
+        <button id="resetSceneBtn">Restablecer Escena</button>
+        <button id="showAchievementsBtn">Mostrar Logros</button>
+        <div class="button-group">
+            <button id="saveBtn">Guardar</button>
+            <button id="loadBtn">Cargar</button>
+        </div>
+        <button id="logoutBtn">Cerrar sesión</button>
+        <button id="closeSettingsBtn">Cerrar</button>
+    </div>
+
+    <!-- Panel de Personalización de Bola -->
+    <div id="customize-panel" class="panel">
+        <h2>Personalizar Bola</h2>
+        <div class="setting-item">
+            <label for="color-picker">Color:</label>
+            <input type="color" id="color-picker" value="#ddffff">
+        </div>
+        <div class="setting-item">
+            <label>Textura:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="texture" value="none" checked> Sin textura</label>
+                <label><input type="radio" name="texture" value="stone"> Piedra</label>
+                <label><input type="radio" name="texture" value="basketball"> Baloncesto</label>
+                <label><input type="radio" name="texture" value="grid"> Cuadrícula</label>
+            </div>
+        </div>
+        <button id="closeCustomizeBtn">Cerrar</button>
+    </div>
+
+    <!-- Panel de Logros -->
+    <div id="achievements-panel" class="panel">
+        <h2>Logros</h2>
+        <ul id="achievements-list" class="achievements-list">
+            <!-- Los logros se insertarán aquí dinámicamente -->
+        </ul>
+        <button id="closeAchievementsBtn">Cerrar</button>
+    </div>
+
+    <!-- Mensaje de advertencia de FPS bajos -->
+    <div id="low-fps-message" class="message-box">
+        <h3>Tus FPS han bajado.</h3>
+        <p>¿Quieres poner los gráficos en bajo para mejorar el rendimiento?</p>
+        <div class="button-group">
+            <button id="confirmLowGraphicsBtn">Sí</button>
+            <button id="cancelLowGraphicsBtn">No</button>
+        </div>
+    </div>
+    
+    <!-- Mensaje de logro desbloqueado -->
+    <div id="achievement-message" class="achievement-box">
+        ¡Logro desbloqueado! La Optimización es la clave.
+    </div>
+
+    <!-- Mensaje de estado de guardar/cargar -->
+    <div id="status-message" class="message-box">
+        <h3 id="status-text"></h3>
+    </div>
+
+
+    <!-- Bibliotecas externas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Variables globales para la escena y la física
+        let scene, camera, renderer, world, controls;
+        let groundMesh, rampMesh;
+        let groundBody, rampBody;
+        const sphereMeshes = [];
+        const sphereBodies = [];
+        const spawnButton = document.getElementById('spawnSphereBtn');
+        const settingsButton = document.getElementById('settingsBtn');
+        const customizeBallBtn = document.getElementById('customizeBallBtn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const customizePanel = document.getElementById('customize-panel');
+        const achievementsPanel = document.getElementById('achievements-panel');
+        const closeSettingsButton = document.getElementById('closeSettingsBtn');
+        const closeCustomizeButton = document.getElementById('closeCustomizeBtn');
+        const closeAchievementsBtn = document.getElementById('closeAchievementsBtn');
+        const gravitySlider = document.getElementById('gravity-slider');
+        const gravityValueDisplay = document.getElementById('gravity-value');
+        const resetSceneButton = document.getElementById('resetSceneBtn');
+        const graphicsRadios = document.querySelectorAll('input[name="graphics"]');
+        const colorPicker = document.getElementById('color-picker');
+        const textureRadios = document.querySelectorAll('input[name="texture"]');
+        const showAchievementsBtn = document.getElementById('showAchievementsBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const loadBtn = document.getElementById('loadBtn');
+        
+        const logoutBtn = document.getElementById('logoutBtn');
+        const gameControls = document.getElementById('game-controls');
+        const topLeftControls = document.getElementById('top-left-controls');
+        const topRightInfo = document.getElementById('top-right-info');
+        
+        // Elementos de autenticación
+        const authPanel = document.getElementById('auth-panel');
+        const emailInput = document.getElementById('email-input');
+        const passwordInput = document.getElementById('password-input');
+        const signupBtn = document.getElementById('signup-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const authError = document.getElementById('auth-error');
+
+        // Elementos para el mensaje de advertencia de FPS bajos
+        const lowFpsMessage = document.getElementById('low-fps-message');
+        const confirmLowGraphicsBtn = document.getElementById('confirmLowGraphicsBtn');
+        const cancelLowGraphicsBtn = document.getElementById('cancelLowGraphicsBtn');
+        
+        // Elementos para el mensaje de logro y estado
+        const achievementMessage = document.getElementById('achievement-box');
+        const statusMessage = document.getElementById('status-message');
+        const statusText = document.getElementById('status-text');
+
+        // Variables para la puntuación
+        let score = 0;
+        const scoreDisplay = document.getElementById('score-display');
+        
+        let cubeCamera, environmentMap;
+        let currentGraphicsSetting = 'low'; // Iniciar con gráficos bajos por defecto
+        let currentSphereColor = '#ddffff';
+        let currentSphereTexture = 'none';
+
+        // Variables para el contador de FPS y la advertencia
+        let fpsDisplay, prevTime;
+        let lowFpsWarningShown = false;
+
+        // Mapeo de nombres de texturas a URLs. Se usan URL de placehold.co para evitar errores de CORS.
+        const textureUrls = {
+            'stone': 'https://placehold.co/600x400/8c726a/ffffff?text=Piedra',
+            'basketball': 'https://placehold.co/600x400/ff7700/ffffff?text=Baloncesto',
+            'grid': 'https://placehold.co/600x400/333333/dddddd?text=Cuadricula',
+        };
+
+        // Variables para la optimización de frustum culling
+        const frustum = new THREE.Frustum();
+        const matrix = new THREE.Matrix4();
+
+        // Estado del juego para guardar y cargar
+        let gameState = {
+            graphics: 'low',
+            gravity: -9.82,
+            ballColor: '#ddffff',
+            ballTexture: 'none',
+            spheres: [],
+            achievements: {
+                optimizationIsKey: false,
+            },
+            score: 0,
+        };
+        
+        // Variables relacionadas con Firebase
+        let app, db, auth, userId;
+        let isAuthReady = false;
+        
+        // Configuración e inicialización de Firebase
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+        // Función para inicializar Firebase
+        function initializeFirebase() {
+            try {
+                if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            document.getElementById('user-email').textContent = user.email;
+                            isAuthReady = true;
+                            authPanel.style.display = 'none';
+                            gameControls.style.display = 'flex';
+                            topLeftControls.style.display = 'flex';
+                            topRightInfo.style.display = 'flex';
+                            console.log('User signed in. UID:', userId);
+                        } else {
+                            userId = null;
+                            document.getElementById('user-email').textContent = 'No Autenticado';
+                            isAuthReady = false;
+                            authPanel.style.display = 'flex';
+                            gameControls.style.display = 'none';
+                            topLeftControls.style.display = 'none';
+                            topRightInfo.style.display = 'none';
+                            console.log('User signed out.');
+                        }
+                    });
+                } else {
+                    console.error('Firebase config not found. Auth and Save/Load will be disabled.');
+                    authPanel.innerHTML = '<p style="color:red;">Error: Funcionalidad de autenticación y guardado deshabilitada. Configuración de Firebase no encontrada.</p>';
+                }
+            } catch (error) {
+                console.error('Error initializing Firebase:', error);
+                authError.textContent = 'Error de conexión. Por favor, revisa tu internet.';
+                authError.style.display = 'block';
+            }
+        }
+        
+        // Función para mostrar un mensaje de estado
+        function showStatusMessage(message, duration = 2000) {
+            statusText.textContent = message;
+            statusMessage.style.display = 'flex';
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, duration);
+        }
+
+        // Función para actualizar la puntuación mostrada
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = score;
+        }
+
+        // Función para guardar el estado del juego en Firestore
+        async function saveState() {
+            if (!isAuthReady || !userId) {
+                showStatusMessage('Error: No has iniciado sesión.');
+                return;
+            }
+
+            try {
+                showStatusMessage('Guardando...');
+                const spheresToSave = sphereBodies.map(body => ({
+                    position: { x: body.position.x, y: body.position.y, z: body.position.z },
+                    quaternion: { x: body.quaternion.x, y: body.quaternion.y, z: body.quaternion.z, w: body.quaternion.w }
+                }));
+
+                const data = {
+                    graphics: currentGraphicsSetting,
+                    gravity: world.gravity.y,
+                    ballColor: currentSphereColor,
+                    ballTexture: currentSphereTexture,
+                    spheres: spheresToSave,
+                    achievements: gameState.achievements,
+                    score: score,
+                };
+
+                const docRef = doc(db, `/artifacts/${appId}/users/${userId}/gameData/state`);
+                await setDoc(docRef, data);
+                showStatusMessage('Partida guardada con éxito!');
+                console.log('Game state saved successfully.');
+            } catch (error) {
+                console.error('Error saving state:', error);
+                showStatusMessage('Error al guardar la partida.');
+            }
+        }
+
+        // Función para cargar el estado del juego desde Firestore
+        async function loadState() {
+            if (!isAuthReady || !userId) {
+                showStatusMessage('Error: No has iniciado sesión.');
+                return;
+            }
+
+            try {
+                showStatusMessage('Cargando...');
+                const docRef = doc(db, `/artifacts/${appId}/users/${userId}/gameData/state`);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // Limpiar las esferas existentes antes de cargar
+                    resetScene();
+
+                    // Aplicar el estado cargado
+                    currentGraphicsSetting = data.graphics;
+                    currentSphereColor = data.ballColor;
+                    currentSphereTexture = data.ballTexture;
+                    world.gravity.set(0, data.gravity, 0);
+                    gameState.achievements = data.achievements;
+                    score = data.score;
+                    
+                    // Actualizar los elementos de la interfaz de usuario
+                    document.getElementById('gravity-slider').value = data.gravity;
+                    gravityValueDisplay.textContent = data.gravity.toFixed(2);
+                    document.getElementById('color-picker').value = data.ballColor;
+                    document.getElementById(`graphics-${data.graphics}`).checked = true;
+                    document.querySelector(`input[name="texture"][value="${data.ballTexture}"]`).checked = true;
+                    updateScoreDisplay(); // Actualizar la puntuación después de cargar
+
+                    // Volver a aplicar la configuración de gráficos para actualizar materiales
+                    applyGraphicsSetting();
+
+                    // Recrear las esferas a partir de los datos cargados
+                    data.spheres.forEach(sphereData => {
+                        const radius = 0.5;
+                        const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
+                        const sphereMaterial = createSphereMaterial();
+                        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                        sphereMesh.castShadow = true;
+                        scene.add(sphereMesh);
+                        sphereMeshes.push(sphereMesh);
+
+                        const sphereShape = new CANNON.Sphere(radius);
+                        const sphereBody = new CANNON.Body({ mass: 1, shape: sphereShape });
+                        sphereBody.position.set(sphereData.position.x, sphereData.position.y, sphereData.position.z);
+                        sphereBody.quaternion.set(sphereData.quaternion.x, sphereData.quaternion.y, sphereData.quaternion.z, sphereData.quaternion.w);
+                        world.addBody(sphereBody);
+                        sphereBodies.push(sphereBody);
+                    });
+
+                    showStatusMessage('Partida cargada con éxito!');
+                    console.log('Game state loaded successfully.');
+                } else {
+                    showStatusMessage('No hay partida guardada.');
+                    console.log('No saved game state found.');
+                }
+            } catch (error) {
+                console.error('Error loading state:', error);
+                showStatusMessage('Error al cargar la partida.');
+            }
+        }
+        
+        // Función para limpiar todas las luces de la escena
+        function clearLights() {
+            // Eliminar luces existentes si las hay
+            scene.children.forEach(child => {
+                if (child.isLight) {
+                    scene.remove(child);
+                }
+            });
+        }
+        
+        // Función para añadir luces estáticas para un entorno de día
+        function addLights() {
+            clearLights(); // Primero elimina las luces existentes
+            
+            // Luz ambiental para una iluminación suave
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            // Luz direccional principal para simular el sol
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight1.position.set(5, 10, 7.5);
+            directionalLight1.castShadow = true;
+            directionalLight1.shadow.mapSize.width = 1024;
+            directionalLight1.shadow.mapSize.height = 1024;
+            directionalLight1.shadow.camera.near = 0.5;
+            directionalLight1.shadow.camera.far = 50;
+            directionalLight1.shadow.camera.left = -20;
+            directionalLight1.shadow.camera.right = 20;
+            directionalLight1.shadow.camera.top = 20;
+            directionalLight1.shadow.camera.bottom = -20;
+            scene.add(directionalLight1);
+        }
+        
+        // Función para aplicar la configuración de gráficos
+        function applyGraphicsSetting() {
+            console.log(`Aplicando configuración de gráficos: ${currentGraphicsSetting}`);
+            
+            // Ajustar sombras y renderer según la configuración
+            if (currentGraphicsSetting === 'low') {
+                renderer.shadowMap.enabled = false;
+            } else {
+                renderer.shadowMap.enabled = true;
+            }
+            
+            // Actualizar el material de todas las esferas existentes
+            updateExistingSpheresMaterial();
+            
+            // Reiniciar el flag de advertencia si el usuario cambia los gráficos manualmente
+            lowFpsWarningShown = false;
+        }
+        
+        // Función para actualizar el material de todas las esferas existentes
+        function updateExistingSpheresMaterial() {
+            const newMaterial = createSphereMaterial();
+            sphereMeshes.forEach(mesh => {
+                mesh.material = newMaterial;
+            });
+        }
+        
+        // Función para crear el suelo
+        function createGround() {
+            const groundGeometry = new THREE.PlaneGeometry(50, 50);
+            
+            // Material con un color de fallback para el césped
+            const groundMaterial = new THREE.MeshPhongMaterial({
+                color: 0x446644,
+                side: THREE.DoubleSide,
+                shininess: 50,
+                specular: 0x333333
+            });
+
+            groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
+
+            // Cargar la textura de césped y aplicarla al material una vez que esté lista
+            const loader = new THREE.TextureLoader();
+            loader.load(
+                'https://media.istockphoto.com/id/155596727/es/foto/fondo-verde-hierba.jpg?s=612x612&w=0&k=20&c=dnquCKa4zBBgDr9JCISLpWBWR7-_yfjhfLNjP-8mlpI=',
+                (texture) => {
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.magFilter = THREE.LinearFilter;
+                    groundMesh.material.map = texture;
+                    groundMesh.material.needsUpdate = true;
+                },
+                undefined,
+                (err) => {
+                    console.error('Error al cargar la textura de césped debido a CORS:', err);
+                }
+            );
+            
+            const groundShape = new CANNON.Plane();
+            groundBody = new CANNON.Body({ mass: 0, shape: groundShape });
+            groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+            world.addBody(groundBody);
+        }
+
+        // Función para crear la rampa, ahora con textura
+        function createRamp() {
+            const rampGeometry = new THREE.BoxGeometry(10, 1, 5);
+
+            // Material con un color de fallback
+            const rampMaterial = new THREE.MeshPhongMaterial({
+                color: 0x886633,
+                shininess: 50,
+                specular: 0x333333
+            });
+
+            rampMesh = new THREE.Mesh(rampGeometry, rampMaterial);
+            rampMesh.position.set(0, 2.5, 0);
+            rampMesh.rotation.z = Math.PI / 6;
+            rampMesh.castShadow = true;
+            scene.add(rampMesh);
+
+            // Cargar la textura de madera y aplicarla al material una vez que esté lista
+            const loader = new THREE.TextureLoader();
+            loader.load(
+                'https://media.istockphoto.com/id/1415858611/es/foto/textura-de-madera-para-muebles-o-dise%C3%B1o-de-interiores-fondo-de-madera-oscura.jpg?s=612x612&w=0&k=20&c=YxOp0NaviJgng5n5ry9TbMQdp9BCoAQ8spELTsB-5Uc=',
+                (texture) => {
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.magFilter = THREE.LinearFilter;
+                    rampMesh.material.map = texture;
+                    rampMesh.material.needsUpdate = true;
+                },
+                undefined,
+                (err) => {
+                    console.error('Error al cargar la textura de madera debido a CORS:', err);
+                }
+            );
+
+            const rampShape = new CANNON.Box(new CANNON.Vec3(5, 0.5, 2.5));
+            rampBody = new CANNON.Body({ mass: 0, shape: rampShape });
+            rampBody.position.set(0, 2.5, 0);
+            rampBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), Math.PI / 6);
+            world.addBody(rampBody);
+        }
+
+        // Configura el mapa de entorno para reflejos de las esferas de cristal
+        function setupEnvironmentMap() {
+            const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024, { // Aumentar resolución a 1024
+                format: THREE.RGBFormat,
+                generateMipmaps: true,
+                minFilter: THREE.LinearMipmapLinearFilter
+            });
+            cubeCamera = new THREE.CubeCamera(1, 10000, cubeRenderTarget);
+            environmentMap = cubeRenderTarget.texture;
+        }
+        
+        // Función para crear el material de la esfera basado en la configuración de gráficos
+        function createSphereMaterial() {
+            let material;
+            const color = new THREE.Color(currentSphereColor);
+            
+            switch (currentGraphicsSetting) {
+                case 'low':
+                    // Material básico para rendimiento óptimo
+                    material = new THREE.MeshLambertMaterial({ color: color });
+                    break;
+                case 'medium':
+                    // Material Phong para un sombreado más avanzado y reflejos especulares
+                    material = new THREE.MeshPhongMaterial({ color: color });
+                    break;
+                case 'rtx':
+                default:
+                    // Material físico mejorado para simular un cristal muy realista
+                    material = new THREE.MeshPhysicalMaterial({
+                        color: color,
+                        transparent: true,
+                        transmission: 1.0,         // Máxima transparencia para un efecto de cristal perfecto
+                        roughness: 0.01,           // Casi sin rugosidad para reflejos súper nítidos
+                        metalness: 0.0,
+                        reflectivity: 1.0,         // Reflectividad completa
+                        ior: 1.52,                 // Índice de refracción del vidrio
+                        envMap: environmentMap,
+                        clearcoat: 1.0,            // Una capa de barniz para un brillo adicional
+                        clearcoatRoughness: 0.05,  // Muy baja rugosidad para el barniz
+                        thickness: 0.5,            // Simula el espesor del objeto para la refracción
+                    });
+                    break;
+            }
+
+            // Aplicar textura si hay una seleccionada
+            if (currentSphereTexture !== 'none') {
+                const loader = new THREE.TextureLoader();
+                const textureUrl = textureUrls[currentSphereTexture];
+                // Cargar la textura y aplicarla al material una vez que esté lista
+                loader.load(
+                    textureUrl,
+                    (texture) => {
+                        material.map = texture;
+                        material.needsUpdate = true;
+                    },
+                    undefined,
+                    (err) => {
+                        console.error(`Error al cargar la textura de la esfera (${currentSphereTexture}):`, err);
+                    }
+                );
+            }
+            
+            return material;
+        }
+
+        // Función para generar una nueva esfera de cristal
+        function spawnSphere() {
+            const radius = 0.5;
+            const sphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
+            
+            const sphereMaterial = createSphereMaterial();
+            const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphereMesh.castShadow = true;
+            scene.add(sphereMesh);
+            sphereMeshes.push(sphereMesh);
+
+            const sphereShape = new CANNON.Sphere(radius);
+            const sphereBody = new CANNON.Body({ mass: 1, shape: sphereShape });
+            sphereBody.position.set(2, 5, -2); // Posición inicial por encima de la rampa
+            world.addBody(sphereBody);
+            sphereBodies.push(sphereBody);
+        }
+
+        // Función para restablecer la escena (eliminar todas las esferas y reiniciar puntuación)
+        function resetScene() {
+            while (sphereMeshes.length > 0) {
+                const mesh = sphereMeshes.pop();
+                scene.remove(mesh);
+                const body = sphereBodies.pop();
+                world.remove(body);
+            }
+            // Reiniciar la puntuación y el flag de advertencia
+            score = 0;
+            updateScoreDisplay();
+            lowFpsWarningShown = false;
+        }
+        
+        // Función para manejar el redimensionamiento de la ventana
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Función para actualizar la lista de logros en el panel
+        function updateAchievementsPanel() {
+            const achievementsList = document.getElementById('achievements-list');
+            achievementsList.innerHTML = ''; // Limpiar la lista
+            
+           
